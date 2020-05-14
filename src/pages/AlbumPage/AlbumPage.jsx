@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import axios from "axios";
-import { Grid, Image, Item, Button } from "semantic-ui-react";
+import { Grid, Image, Item, Button, Loader } from "semantic-ui-react";
 import "./AlbumPage.scss";
 
 import MyBtn from "../../components/MyBtn/MyBtn.Component";
@@ -15,6 +15,7 @@ class AlbumPage extends React.Component {
     comment: "",
     genres: [],
     albumCover: "",
+    uploadingImage: false,
   };
 
   componentDidMount() {
@@ -38,6 +39,10 @@ class AlbumPage extends React.Component {
   };
 
   handleSubmit = async (event) => {
+    this.setState({
+      uploadingImage: true,
+    });
+
     const image = event.target.files[0];
     const id = this.state.id;
 
@@ -49,6 +54,7 @@ class AlbumPage extends React.Component {
       .then((res) => {
         this.setState({
           albumCover: res.data.imageUrl,
+          uploadingImage: false,
         });
       })
       .catch((err) => {
@@ -64,6 +70,28 @@ class AlbumPage extends React.Component {
       justifyContent: "center",
     };
 
+    const loadingMarkup = this.state.uploadingImage ? (
+      <Loader active />
+    ) : (
+      <Fragment>
+        <Image
+          size="large"
+          src={this.state.albumCover}
+          alt={this.state.album}
+        />
+        <input
+          hidden
+          type="file"
+          name="image"
+          id="imageInput"
+          onChange={this.handleSubmit}
+        />
+        <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
+          Edit Cover
+        </Button>
+      </Fragment>
+    );
+
     return (
       <Grid>
         <Grid.Column
@@ -75,21 +103,7 @@ class AlbumPage extends React.Component {
           computer={8}
           style={columnStyle}
         >
-          <Image
-            size="large"
-            src={this.state.albumCover}
-            alt={this.state.album}
-          />
-          <input
-            hidden
-            type="file"
-            name="image"
-            id="imageInput"
-            onChange={this.handleSubmit}
-          />
-          <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
-            Edit Cover
-          </Button>
+          {loadingMarkup}
         </Grid.Column>
         <Grid.Column
           as="div"
