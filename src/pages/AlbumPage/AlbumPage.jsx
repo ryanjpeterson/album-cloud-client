@@ -45,7 +45,7 @@ class AlbumPage extends React.Component {
     formData.append("image", image, image.name);
 
     axios
-      .post(`http://localhost:5000/album/${id}/uploadCover`, formData)
+      .post(`http://localhost:5000/album/${id}/uploadAlbumCover`, formData)
       .then((res) => {
         this.setState({
           albumCover: res.data.imageUrl,

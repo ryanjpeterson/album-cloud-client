@@ -9,10 +9,13 @@ class PostPage extends React.Component {
     year: "",
     comment: "",
     genres: "",
+    albumCover: undefined,
   };
 
-  onSubmit = (event) => {
+  onSubmit = async (event) => {
     event.preventDefault();
+    let newPostId;
+
     const newAlbumPost = {
       artist: this.state.artist,
       album: this.state.album,
@@ -21,10 +24,10 @@ class PostPage extends React.Component {
       genres: this.state.genres,
     };
 
-    axios
-      .post("/post", newAlbumPost)
+    await axios
+      .post("http://localhost:5000/post", newAlbumPost)
       .then((res) => {
-        console.log(res);
+        newPostId = res.data.newPostId;
 
         this.setState({
           artist: "",
@@ -37,12 +40,41 @@ class PostPage extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+
+    const image = this.state.albumCover;
+    await this.submitImage(newPostId, image);
   };
 
   onChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  };
+
+  onImageChange = (event) => {
+    this.setState(
+      {
+        albumCover: event.target.files[0],
+      },
+      () => console.log(this.state.albumCover)
+    );
+  };
+
+  submitImage = (docId, albumCover) => {
+    const id = docId;
+    const image = albumCover;
+
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+
+    axios
+      .post(`http://localhost:5000/album/${id}/uploadAlbumCover`, formData)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   render() {
@@ -99,6 +131,14 @@ class PostPage extends React.Component {
                 placeholder="Genres - Separate with a comma"
                 value={this.state.genres}
                 required
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Upload album cover:</label>
+              <input
+                onChange={this.onImageChange}
+                type="file"
+                placeholder="Upload album cover"
               />
             </Form.Field>
             <Button color="teal">Submit</Button>
