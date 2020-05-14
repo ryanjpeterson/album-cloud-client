@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Grid } from "semantic-ui-react";
+import { Form, Button, Grid, Loader } from "semantic-ui-react";
 import axios from "axios";
 
 class PostPage extends React.Component {
@@ -14,7 +14,10 @@ class PostPage extends React.Component {
 
   onSubmit = async (event) => {
     event.preventDefault();
-    let newPostId;
+
+    this.setState({
+      uploadingPost: true,
+    });
 
     const newAlbumPost = {
       artist: this.state.artist,
@@ -22,7 +25,10 @@ class PostPage extends React.Component {
       year: this.state.year,
       comment: this.state.comment,
       genres: this.state.genres,
+      uploadingPost: false,
     };
+
+    let newPostId;
 
     await axios
       .post("http://localhost:5000/post", newAlbumPost)
@@ -43,6 +49,10 @@ class PostPage extends React.Component {
 
     const image = this.state.albumCover;
     await this.submitImage(newPostId, image);
+
+    this.setState({
+      uploadingPost: false,
+    });
   };
 
   onChange = (event) => {
@@ -78,74 +88,75 @@ class PostPage extends React.Component {
   };
 
   render() {
-    return (
-      <Grid container>
-        <Grid.Column>
-          <Form onSubmit={this.onSubmit}>
-            <h1>Post an album</h1>
-            <Form.Field>
-              <label>Artist:</label>
-              <input
-                onChange={this.onChange}
-                name="artist"
-                placeholder="Artist"
-                value={this.state.artist}
-                required
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Album:</label>
-              <input
-                onChange={this.onChange}
-                name="album"
-                placeholder="Album"
-                value={this.state.album}
-                required
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Year:</label>
-              <input
-                onChange={this.onChange}
-                name="year"
-                placeholder="Year"
-                value={this.state.year}
-                required
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Comment:</label>
-              <input
-                onChange={this.onChange}
-                name="comment"
-                placeholder="Comment"
-                value={this.state.comment}
-                required
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Genres:</label>
-              <input
-                onChange={this.onChange}
-                name="genres"
-                placeholder="Genres - Separate with a comma"
-                value={this.state.genres}
-                required
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Upload album cover:</label>
-              <input
-                onChange={this.onImageChange}
-                type="file"
-                placeholder="Upload album cover"
-              />
-            </Form.Field>
-            <Button color="teal">Submit</Button>
-          </Form>
-        </Grid.Column>
-      </Grid>
+    const loadingMarkup = this.state.uploadingPost ? (
+      <Loader content="Submitting post..." active />
+    ) : (
+      <Grid.Column>
+        <Form onSubmit={this.onSubmit}>
+          <h1>Post an album</h1>
+          <Form.Field>
+            <label>Artist:</label>
+            <input
+              onChange={this.onChange}
+              name="artist"
+              placeholder="Artist"
+              value={this.state.artist}
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Album:</label>
+            <input
+              onChange={this.onChange}
+              name="album"
+              placeholder="Album"
+              value={this.state.album}
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Year:</label>
+            <input
+              onChange={this.onChange}
+              name="year"
+              placeholder="Year"
+              value={this.state.year}
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Comment:</label>
+            <input
+              onChange={this.onChange}
+              name="comment"
+              placeholder="Comment"
+              value={this.state.comment}
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Genres:</label>
+            <input
+              onChange={this.onChange}
+              name="genres"
+              placeholder="Genres - Separate with a comma"
+              value={this.state.genres}
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Upload album cover:</label>
+            <input
+              onChange={this.onImageChange}
+              type="file"
+              placeholder="Upload album cover"
+            />
+          </Form.Field>
+          <Button color="teal">Submit</Button>
+        </Form>
+      </Grid.Column>
     );
+    return <Grid container>{loadingMarkup}</Grid>;
   }
 }
 

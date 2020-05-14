@@ -36,9 +36,13 @@ class GenresPage extends React.Component {
     };
 
     return (
-      <Grid>
+      <Grid className="album-card__container">
         {this.state.genres.map((genre) => {
-          return <GenreCard genre={genre} />;
+          return (
+            <Grid.Column key={genre} mobile={8} computer={4}>
+              <GenreCard genre={genre} />
+            </Grid.Column>
+          );
         })}
       </Grid>
     );

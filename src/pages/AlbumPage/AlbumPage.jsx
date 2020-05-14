@@ -15,10 +15,15 @@ class AlbumPage extends React.Component {
     comment: "",
     genres: [],
     albumCover: "",
+    loading: false,
     uploadingImage: false,
   };
 
   componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+
     const id = this.props.match.params.id;
     axios.get(`http://localhost:5000/album/${id}`).then((res) => {
       this.setState({
@@ -30,6 +35,10 @@ class AlbumPage extends React.Component {
         genres: res.data.genres,
         albumCover: res.data.albumCover,
       });
+    });
+
+    this.setState({
+      loading: false,
     });
   }
 
@@ -70,30 +79,10 @@ class AlbumPage extends React.Component {
       justifyContent: "center",
     };
 
-    const loadingMarkup = this.state.uploadingImage ? (
-      <Loader active />
+    const loadingMarkup = this.state.loading ? (
+      <Loader content="Loading album..." active />
     ) : (
       <Fragment>
-        <Image
-          size="large"
-          src={this.state.albumCover}
-          alt={this.state.album}
-        />
-        <input
-          hidden
-          type="file"
-          name="image"
-          id="imageInput"
-          onChange={this.handleSubmit}
-        />
-        <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
-          Edit Cover
-        </Button>
-      </Fragment>
-    );
-
-    return (
-      <Grid>
         <Grid.Column
           as="div"
           color="teal"
@@ -103,7 +92,27 @@ class AlbumPage extends React.Component {
           computer={8}
           style={columnStyle}
         >
-          {loadingMarkup}
+          {this.state.uploadingImage ? (
+            <Loader content="Uploading cover..." active />
+          ) : (
+            <Fragment>
+              <Image
+                size="large"
+                src={this.state.albumCover}
+                alt={this.state.album}
+              />
+              <input
+                hidden
+                type="file"
+                name="image"
+                id="imageInput"
+                onChange={this.handleSubmit}
+              />
+              <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
+                Edit Cover
+              </Button>
+            </Fragment>
+          )}
         </Grid.Column>
         <Grid.Column
           as="div"
@@ -137,8 +146,10 @@ class AlbumPage extends React.Component {
             albumCover={this.state.albumCover}
           />
         </Grid.Column>
-      </Grid>
+      </Fragment>
     );
+
+    return <Grid>{loadingMarkup}</Grid>;
   }
 }
 
