@@ -26,11 +26,11 @@ class LoginPage extends React.Component {
       .post("/login", formData)
       .then((res) => {
         const FBIdToken = res.data.token;
-        localStorage.setItem("FBIdToken", `Bearer ${FBIdToken}`);
-        console.log(FBIdToken);
+        sessionStorage.setItem("FBIdToken", `Bearer ${FBIdToken}`);
+        window.location.href = "/";
       })
       .catch((err) => {
-        console.log(err);
+        alert(err);
       });
   };
 

@@ -1,11 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 import "./App.scss";
-
-// Firebase
-import firebase from "firebase";
 
 // Components
 import Navbar from "./components/Navbar/Navbar.Component";
@@ -14,31 +11,43 @@ import Navbar from "./components/Navbar/Navbar.Component";
 import HomePage from "./pages/HomePage/HomePage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import PostPage from "./pages/PostPage/PostPage";
-import GenresPage from "./pages/GenresPage/GenresPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL =
+  "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
 
 let FBIdToken;
 
-if (localStorage.FBIdToken) {
-  FBIdToken = localStorage.FBIdToken;
-  axios.defaults.headers.common["Authorization"] = FBIdToken;
-} else {
-  console.log("No");
-}
-
 class App extends React.Component {
+  state = {
+    authenticated: false,
+  };
+
+  componentDidMount() {
+    if (sessionStorage.FBIdToken) {
+      FBIdToken = sessionStorage.FBIdToken;
+      axios.defaults.headers.common["Authorization"] = FBIdToken;
+
+      this.setState({
+        authenticated: true,
+      });
+    }
+  }
+
   render() {
+    const { authenticated } = this.state;
+
     return (
       <Router>
         <Container fluid className="App">
-          <Navbar />
+          <Navbar authenticated={authenticated} />
           <Route exact path="/" component={HomePage} />
           <Route exact path="/album/:id" component={AlbumPage} />
-          <Route exact path="/genres" component={GenresPage} />
-          <Route exact path="/post" component={PostPage} />
+          {authenticated ? (
+            <Route exact path="/post" component={PostPage} />
+          ) : null}
           <Route exact path="/login" component={LoginPage} />
+          <Redirect from="*" to="/" />
         </Container>
       </Router>
     );
