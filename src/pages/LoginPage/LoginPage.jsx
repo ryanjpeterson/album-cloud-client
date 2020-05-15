@@ -26,8 +26,7 @@ class LoginPage extends React.Component {
       .post("/login", formData)
       .then((res) => {
         const FBIdToken = res.data.token;
-        localStorage.setItem("Authorization", `Bearer ${FBIdToken}`);
-        axios.defaults.headers.common["Authorization"] = FBIdToken;
+        localStorage.setItem("FBIdToken", `Bearer ${FBIdToken}`);
         console.log(FBIdToken);
       })
       .catch((err) => {

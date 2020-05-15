@@ -42,13 +42,13 @@ class PostPage extends React.Component {
           comment: "",
           genres: "",
         });
+
+        const image = this.state.albumCover;
+        this.submitImage(newPostId, image);
       })
       .catch((err) => {
-        console.log(err);
+        alert(err);
       });
-
-    const image = this.state.albumCover;
-    await this.submitImage(newPostId, image);
 
     this.setState({
       uploadingPost: false,

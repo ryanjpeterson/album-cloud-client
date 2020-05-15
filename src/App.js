@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 import "./App.scss";
 
+// Firebase
+import firebase from "firebase";
+
 // Components
 import Navbar from "./components/Navbar/Navbar.Component";
 
@@ -15,9 +18,15 @@ import GenresPage from "./pages/GenresPage/GenresPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
 axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-  "Authorization"
-);
+
+let FBIdToken;
+
+if (localStorage.FBIdToken) {
+  FBIdToken = localStorage.FBIdToken;
+  axios.defaults.headers.common["Authorization"] = FBIdToken;
+} else {
+  console.log("No");
+}
 
 class App extends React.Component {
   render() {
