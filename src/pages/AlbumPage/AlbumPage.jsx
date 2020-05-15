@@ -19,13 +19,13 @@ class AlbumPage extends React.Component {
     uploadingImage: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({
       loading: true,
     });
 
     const id = this.props.match.params.id;
-    axios.get(`http://localhost:5000/album/${id}`).then((res) => {
+    await axios.get(`/album/${id}`).then((res) => {
       this.setState({
         id: res.data.id,
         artist: res.data.artist,
@@ -59,7 +59,7 @@ class AlbumPage extends React.Component {
     formData.append("image", image, image.name);
 
     axios
-      .post(`http://localhost:5000/album/${id}/uploadAlbumCover`, formData)
+      .post(`/album/${id}/uploadAlbumCover`, formData)
       .then((res) => {
         this.setState({
           albumCover: res.data.imageUrl,
@@ -79,9 +79,8 @@ class AlbumPage extends React.Component {
       justifyContent: "center",
     };
 
-    const loadingMarkup = this.state.loading ? (
-      <Loader content="Loading album..." active />
-    ) : (
+    const loader = <Loader content="Loading album..." active />;
+    const content = (
       <Fragment>
         <Grid.Column
           as="div"
@@ -149,7 +148,7 @@ class AlbumPage extends React.Component {
       </Fragment>
     );
 
-    return <Grid>{loadingMarkup}</Grid>;
+    return <Grid>{this.state.loading ? loader : content}</Grid>;
   }
 }
 

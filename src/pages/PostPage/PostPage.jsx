@@ -31,7 +31,7 @@ class PostPage extends React.Component {
     let newPostId;
 
     await axios
-      .post("http://localhost:5000/post", newAlbumPost)
+      .post("/post", newAlbumPost)
       .then((res) => {
         newPostId = res.data.newPostId;
 
@@ -62,12 +62,9 @@ class PostPage extends React.Component {
   };
 
   onImageChange = (event) => {
-    this.setState(
-      {
-        albumCover: event.target.files[0],
-      },
-      () => console.log(this.state.albumCover)
-    );
+    this.setState({
+      albumCover: event.target.files[0],
+    });
   };
 
   submitImage = (docId, albumCover) => {
@@ -78,7 +75,7 @@ class PostPage extends React.Component {
     formData.append("image", image, image.name);
 
     axios
-      .post(`http://localhost:5000/album/${id}/uploadAlbumCover`, formData)
+      .post(`/album/${id}/uploadAlbumCover`, formData)
       .then((res) => {
         console.log(res);
       })
@@ -88,9 +85,8 @@ class PostPage extends React.Component {
   };
 
   render() {
-    const loadingMarkup = this.state.uploadingPost ? (
-      <Loader content="Submitting post..." active />
-    ) : (
+    const loader = <Loader content="Submitting post..." active />;
+    const content = (
       <Grid.Column>
         <Form onSubmit={this.onSubmit}>
           <h1>Post an album</h1>
@@ -150,13 +146,15 @@ class PostPage extends React.Component {
               onChange={this.onImageChange}
               type="file"
               placeholder="Upload album cover"
+              required
             />
           </Form.Field>
           <Button color="teal">Submit</Button>
         </Form>
       </Grid.Column>
     );
-    return <Grid container>{loadingMarkup}</Grid>;
+
+    return <Grid container>{this.state.uploadingPost ? loader : content}</Grid>;
   }
 }
 

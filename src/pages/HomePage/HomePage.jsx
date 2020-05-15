@@ -17,7 +17,7 @@ class HomePage extends React.Component {
       loading: true,
     });
 
-    axios.get("http://localhost:5000/").then((res) => {
+    axios.get("/").then((res) => {
       this.setState({
         albums: res.data.sort((a, b) =>
           a.dateUpdated < b.dateUpdated ? 1 : -1
@@ -64,23 +64,25 @@ class HomePage extends React.Component {
   };
 
   render() {
-    const loadingMarkup = this.state.loading ? (
-      <Loader content="Loading albums..." active />
-    ) : (
-      this.state.albums.map((doc) => (
-        <Grid.Column key={doc.id} mobile={8} computer={4}>
-          <AlbumCard
-            key={doc.id}
-            id={doc.id}
-            artist={doc.artist}
-            album={doc.album}
-            year={doc.year}
-            albumCover={doc.albumCover}
-          />
-        </Grid.Column>
-      ))
+    const loader = <Loader content="Loading albums..." active />;
+    const content = this.state.albums.map((doc) => (
+      <Grid.Column key={doc.id} mobile={8} computer={4}>
+        <AlbumCard
+          key={doc.id}
+          id={doc.id}
+          artist={doc.artist}
+          album={doc.album}
+          year={doc.year}
+          albumCover={doc.albumCover}
+        />
+      </Grid.Column>
+    ));
+
+    return (
+      <Grid className="album-card__container">
+        {this.state.loading ? loader : content}
+      </Grid>
     );
-    return <Grid className="album-card__container">{loadingMarkup}</Grid>;
   }
 }
 

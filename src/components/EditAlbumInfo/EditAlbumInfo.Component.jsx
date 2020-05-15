@@ -13,17 +13,29 @@ class EditAlbumInfo extends React.Component {
     albumCover: "",
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentDidMount() {
     this.setState({
-      id: nextProps.id,
-      artist: nextProps.artist,
-      album: nextProps.album,
-      year: nextProps.year,
-      comment: nextProps.comment,
-      genres: nextProps.genres,
-      albumCover: nextProps.albumCover,
+      id: this.props.id,
+      artist: this.props.artist,
+      album: this.props.album,
+      year: this.props.year,
+      comment: this.props.comment,
+      genres: this.props.genres,
+      albumCover: this.props.albumCover,
     });
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({
+  //     id: nextProps.id,
+  //     artist: nextProps.artist,
+  //     album: nextProps.album,
+  //     year: nextProps.year,
+  //     comment: nextProps.comment,
+  //     genres: nextProps.genres,
+  //     albumCover: nextProps.albumCover,
+  //   });
+  // }
 
   handleChange = (event) => {
     this.setState({
@@ -34,7 +46,7 @@ class EditAlbumInfo extends React.Component {
   onSubmit = (event) => {
     event.preventDefault();
     axios
-      .post(`http://localhost:5000/album/${this.state.id}/editAlbumInfo`, {
+      .post(`/album/${this.state.id}/editAlbumInfo`, {
         id: this.state.id,
         artist: this.state.artist,
         album: this.state.album,
