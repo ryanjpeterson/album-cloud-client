@@ -79,6 +79,34 @@ class AlbumPage extends React.Component {
       justifyContent: "center",
     };
 
+    const authenticated = this.props.authenticated;
+    const editAlbumCoverBtn = (
+      <Fragment>
+        <input
+          hidden
+          type="file"
+          name="image"
+          id="imageInput"
+          onChange={this.handleSubmit}
+        />
+        <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
+          Edit Cover
+        </Button>
+      </Fragment>
+    );
+
+    const editAlbumInfoBtn = (
+      <EditAlbumInfo
+        id={this.state.id}
+        artist={this.state.artist}
+        album={this.state.album}
+        comment={this.state.comment}
+        year={this.state.year}
+        genres={this.state.genres}
+        albumCover={this.state.albumCover}
+      />
+    );
+
     const loader = <Loader content="Loading album..." active />;
     const content = (
       <Fragment>
@@ -100,16 +128,7 @@ class AlbumPage extends React.Component {
                 src={this.state.albumCover}
                 alt={this.state.album}
               />
-              <input
-                hidden
-                type="file"
-                name="image"
-                id="imageInput"
-                onChange={this.handleSubmit}
-              />
-              <Button style={{ marginTop: "1rem" }} onClick={this.handleClick}>
-                Edit Cover
-              </Button>
+              {authenticated ? editAlbumCoverBtn : null}
             </Fragment>
           )}
         </Grid.Column>
@@ -135,15 +154,7 @@ class AlbumPage extends React.Component {
               <p style={{ margin: "3rem 0 1rem 0" }}>{this.state.comment}</p>
             </Item.Description>
           </Item>
-          <EditAlbumInfo
-            id={this.state.id}
-            artist={this.state.artist}
-            album={this.state.album}
-            comment={this.state.comment}
-            year={this.state.year}
-            genres={this.state.genres}
-            albumCover={this.state.albumCover}
-          />
+          {authenticated ? editAlbumInfoBtn : null}
         </Grid.Column>
       </Fragment>
     );

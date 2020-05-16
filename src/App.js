@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useContext } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { Container } from "semantic-ui-react";
@@ -42,7 +42,12 @@ class App extends React.Component {
         <Container fluid className="App">
           <Navbar authenticated={authenticated} />
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/album/:id" component={AlbumPage} />
+          <Route
+            exact
+            path="/album/:id"
+            authenticated={authenticated}
+            component={AlbumPage}
+          />
           {authenticated ? (
             <Route exact path="/post" component={PostPage} />
           ) : null}
