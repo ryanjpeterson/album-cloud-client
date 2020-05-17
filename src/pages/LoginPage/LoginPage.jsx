@@ -55,7 +55,7 @@ class LoginPage extends React.Component {
               onChange={this.onChange}
               name="password"
               type="password"
-              placeholder="Email"
+              placeholder="Password"
               required
             />
           </Form.Field>
