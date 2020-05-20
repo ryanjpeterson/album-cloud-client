@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { Container } from "semantic-ui-react";
@@ -13,8 +13,10 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import PostPage from "./pages/PostPage/PostPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
-axios.defaults.baseURL =
-  "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
+// axios.defaults.baseURL =
+//   "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
+
+axios.defaults.baseURL = "http://localhost:5000/";
 
 let FBIdToken;
 

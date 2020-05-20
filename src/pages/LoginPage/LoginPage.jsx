@@ -1,25 +1,17 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Container, Form, Button } from "semantic-ui-react";
 
-class LoginPage extends React.Component {
-  state = {
-    email: "",
-    password: "",
-  };
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  onChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  onSubmit = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
 
     const formData = {
-      email: this.state.email,
-      password: this.state.password,
+      email,
+      password,
     };
 
     axios
@@ -34,38 +26,36 @@ class LoginPage extends React.Component {
       });
   };
 
-  render() {
-    return (
-      <Container style={{ marginTop: "3rem" }}>
-        <Form onSubmit={this.onSubmit}>
-          <h1>Login</h1>
-          <Form.Field>
-            <label>Email:</label>
-            <input
-              onChange={this.onChange}
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Password:</label>
-            <input
-              onChange={this.onChange}
-              name="password"
-              type="password"
-              placeholder="Password"
-              required
-            />
-          </Form.Field>
-          <Button color="teal" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container style={{ marginTop: "3rem" }}>
+      <Form onSubmit={onSubmit}>
+        <h1>Login</h1>
+        <Form.Field>
+          <label>Email:</label>
+          <input
+            onChange={(event) => setEmail(event.target.value)}
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>Password:</label>
+          <input
+            onChange={(event) => setPassword(event.target.value)}
+            name="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+        </Form.Field>
+        <Button color="teal" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </Container>
+  );
+};
 
 export default LoginPage;

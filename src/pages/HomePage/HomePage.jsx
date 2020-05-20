@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Grid, Loader } from "semantic-ui-react";
 import "./HomePage.scss";
@@ -6,29 +6,24 @@ import "./HomePage.scss";
 // Components
 import AlbumCard from "../../components/AlbumCard/AlbumCard.Component";
 
-class HomePage extends React.Component {
-  state = {
-    albums: [],
-    loading: false,
+const HomePage = () => {
+  const [loading, setLoading] = useState(false);
+  const [albums, setAlbums] = useState([]);
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    const res = await axios.get("/");
+    await setAlbums(res.data);
+
+    setLoading(false);
   };
 
-  componentDidMount() {
-    this.setState({
-      loading: true,
-    });
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    axios.get("/").then((res) => {
-      this.setState({
-        albums: res.data.sort((a, b) =>
-          a.dateUpdated < b.dateUpdated ? 1 : -1
-        ),
-        loading: false,
-      });
-    });
-  }
-
-  sortAlbums = (sortMethod) => {
-    const albums = this.state.albums;
+  const sortAlbums = (sortMethod) => {
     let sorted;
 
     switch (sortMethod) {
@@ -58,32 +53,48 @@ class HomePage extends React.Component {
         sorted = albums;
     }
 
-    this.setState({
-      albums: sorted,
-    });
+    setAlbums(sorted);
   };
 
-  render() {
-    const loader = <Loader content="Loading albums..." active />;
-    const content = this.state.albums.map((doc) => (
-      <Grid.Column key={doc.id} mobile={8} computer={4}>
-        <AlbumCard
-          key={doc.id}
-          id={doc.id}
-          artist={doc.artist}
-          album={doc.album}
-          year={doc.year}
-          albumCover={doc.albumCover}
-        />
-      </Grid.Column>
-    ));
+  const loader = <Loader content="Loading albums..." active />;
+  const content = albums.map((doc) => (
+    <Grid.Column key={doc.id} mobile={8} computer={4}>
+      <AlbumCard
+        key={doc.id}
+        id={doc.id}
+        artist={doc.artist}
+        album={doc.album}
+        year={doc.year}
+        albumCover={doc.albumCover}
+      />
+    </Grid.Column>
+  ));
 
-    return (
-      <Grid className="album-card__container">
-        {this.state.loading ? loader : content}
-      </Grid>
-    );
-  }
-}
+  return (
+    <Grid className="album-card__container">{loading ? loader : content}</Grid>
+  );
+};
+
+// class HomePage extends React.Component {
+//   state = {
+//     albums: [],
+//     loading: false,
+//   };
+
+//   componentDidMount() {
+//     this.setState({
+//       loading: true,
+//     });
+
+//     axios.get("/").then((res) => {
+//       this.setState({
+//         albums: res.data.sort((a, b) =>
+//           a.dateUpdated < b.dateUpdated ? 1 : -1
+//         ),
+//         loading: false,
+//       });
+//     });
+//   }
+// }
 
 export default HomePage;
