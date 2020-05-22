@@ -18,10 +18,10 @@ const AlbumPage = ({ match, authenticated }) => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
 
-    axios
+    await axios
       .get(`/album/${id}`)
       .then((res) => {
         setArtist(res.data.artist);
@@ -30,7 +30,6 @@ const AlbumPage = ({ match, authenticated }) => {
         setComment(res.data.comment);
         setGenres(res.data.genres);
         setAlbumCover(res.data.albumCover);
-        setLoading(false);
       })
       .catch((err) => {
         console.log(err);

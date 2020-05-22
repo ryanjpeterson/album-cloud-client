@@ -8,26 +8,30 @@ const PostPage = () => {
   const [year, setYear] = useState("");
   const [comment, setComment] = useState("");
   const [genres, setGenres] = useState("");
-  const [albumCover, setAlbumCover] = useState(undefined);
+  const [albumCover, setAlbumCover] = useState(null);
   const [uploadingPost, setUploadingPost] = useState(false);
+
+  let newPostId;
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
     setUploadingPost(true);
 
-    let newPostId;
+    await uploadPost();
+    await uploadImage(newPostId);
 
+    setUploadingPost(false);
+  };
+
+  const uploadPost = async () => {
     const newAlbumPost = {
-      artist: artist,
-      album: album,
-      year: year,
-      comment: comment,
-      genres: genres,
+      artist,
+      album,
+      year,
+      comment,
+      genres,
     };
-
-    const imageData = new FormData();
-    imageData.append("image", albumCover, albumCover.name);
 
     await axios
       .post("/post", newAlbumPost)
@@ -43,17 +47,20 @@ const PostPage = () => {
       .catch((err) => {
         alert(`Error: ${err}`);
       });
+  };
+
+  const uploadImage = async (id) => {
+    const imageData = new FormData();
+    imageData.append("image", albumCover, albumCover.name);
 
     await axios
-      .post(`/album/${newPostId}/uploadAlbumCover`, imageData)
+      .post(`/album/${id}/uploadAlbumCover`, imageData)
       .then((res) => {
         console.log(res);
       })
       .catch((err) => {
         alert(`Error: ${err}`);
       });
-
-    setUploadingPost(false);
   };
 
   const loader = <Loader content="Submitting post..." active />;

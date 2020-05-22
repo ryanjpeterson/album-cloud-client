@@ -13,10 +13,7 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import PostPage from "./pages/PostPage/PostPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
-// axios.defaults.baseURL =
-//   "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
-
-axios.defaults.baseURL = "http://localhost:5000/";
+axios.defaults.baseURL = "http://localhost:5000";
 
 let FBIdToken;
 
@@ -47,13 +44,19 @@ class App extends React.Component {
           <Route
             exact
             path="/album/:id"
-            authenticated={authenticated}
-            component={AlbumPage}
+            component={(props) => (
+              <AlbumPage {...props} authenticated={authenticated} />
+            )}
           />
           {authenticated ? (
-            <Route exact path="/post" component={PostPage} />
-          ) : null}
-          <Route exact path="/login" component={LoginPage} />
+            <Route
+              exact
+              path="/post"
+              component={() => <PostPage authenticated={authenticated} />}
+            />
+          ) : (
+            <Route exact path="/login" component={LoginPage} />
+          )}
           <Redirect from="*" to="/" />
         </Container>
       </Router>
