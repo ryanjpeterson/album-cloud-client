@@ -19,7 +19,7 @@ const EditAlbumInfo = (props) => {
     setComment(props.comment);
     setGenres(props.genres);
     setAlbumCover(props.albumCover);
-  }, []);
+  }, [props]);
 
   const onSubmit = () => {
     axios
