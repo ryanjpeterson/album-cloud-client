@@ -13,9 +13,9 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import PostPage from "./pages/PostPage/PostPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
-// axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.baseURL =
-  "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
+axios.defaults.baseURL = "http://localhost:5000";
+// axios.defaults.baseURL =
+//   "https://us-central1-album-cloud-8c72f.cloudfunctions.net/api";
 
 let FBIdToken;
 
